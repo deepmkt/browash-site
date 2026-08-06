@@ -3,7 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BroWash — Limpeza Aérea Inteligente de Fachadas e Placas Solares</title>
+<title>BroWash — Limpeza Aérea de Fachadas e Placas Solares por Drone | Maceió-AL</title>
+<meta name="description" content="A BroWash limpa fachadas, edifícios e placas solares com drones de alta precisão — sem andaime, sem risco e sem parar sua rotina. Tecnologia exclusiva no Nordeste. Diagnóstico gratuito pelo WhatsApp.">
+<meta name="theme-color" content="#05080e">
+<meta property="og:title" content="BroWash — Limpeza Aérea Inteligente por Drone">
+<meta property="og:description" content="Fachadas, edifícios e placas solares limpos sem andaime, sem risco e sem parar sua operação. Atendemos Maceió e região.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="/img2.jpg">
+<meta property="og:locale" content="pt_BR">
 <link rel="icon" type="image/png" href="/img1.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -414,6 +421,22 @@
   }
   @keyframes fabPulse{0%,100%{box-shadow:0 14px 30px -8px rgba(51,215,255,.6);}50%{box-shadow:0 14px 40px -4px rgba(51,215,255,.9);}}
   .whatsapp-fab svg{width:27px; height:27px;}
+
+  /* faixa de confiança */
+  .trustbar{background:linear-gradient(180deg,#081120,#0a1220); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .tb-wrap{display:grid; grid-template-columns:repeat(4,1fr); gap:22px; padding:26px 24px;}
+  .tb-item{display:flex; gap:12px; align-items:flex-start;}
+  .tb-item svg{width:26px;height:26px;flex:none;color:var(--cyan);margin-top:2px;}
+  .tb-item b{display:block;font-size:.93rem;letter-spacing:.01em;}
+  .tb-item span{display:block;font-size:.8rem;color:var(--ink-dim);margin-top:3px;line-height:1.45;}
+  @media(max-width:900px){.tb-wrap{grid-template-columns:1fr 1fr; gap:16px;}}
+  @media(max-width:520px){.tb-wrap{grid-template-columns:1fr; padding:20px 18px; gap:14px;}}
+  /* tabela comparativa: rolagem segura no celular */
+  .cmp-scroll{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  .cmp-scroll table{min-width:560px;}
+  /* nota LGPD */
+  .lgpd{display:flex;gap:9px;align-items:center;margin-top:14px;color:var(--ink-faint);font-size:.78rem;line-height:1.5;}
+  .lgpd svg{width:15px;height:15px;flex:none;color:var(--ok);}
 </style>
 </head>
 <body>
@@ -455,6 +478,14 @@
       </div>
     </div>
   </section>
+<div class="trustbar" aria-label="Compromissos BroWash">
+  <div class="wrap tb-wrap">
+    <div class="tb-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg><div><b>Equipe 100% no solo</b><span>ninguém pendurado, zero passivo de segurança</span></div></div>
+    <div class="tb-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M8 15h4"/></svg><div><b>Relatório antes e depois</b><span>resultado documentado, pronto pra prestação de contas</span></div></div>
+    <div class="tb-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><div><b>Sem parar sua rotina</b><span>operação sem interditar entrada nem isolar áreas</span></div></div>
+    <div class="tb-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/></svg><div><b>Tecnologia exclusiva no Nordeste</b><span>drones de alta precisão para lavagem aérea</span></div></div>
+  </div>
+</div>
 
   <!-- COVERAGE -->
   <section class="coverage">
@@ -594,7 +625,7 @@
         <p>A diferença aparece antes mesmo do resultado final.</p>
       </div>
       <div class="cmp-wrap reveal">
-        <table class="cmp-table">
+        <div class="cmp-scroll"><table class="cmp-table">
           <thead>
             <tr><th>Critério</th><th>Método tradicional</th><th class="win">BroWash</th></tr>
           </thead>
@@ -630,7 +661,7 @@
               <td><span class="cell-good">✓ Antes e depois documentado</span></td>
             </tr>
           </tbody>
-        </table>
+        </table></div>
       </div>
 
       <div class="exclusive-strip reveal">
@@ -779,7 +810,7 @@
             <div class="q-field">
               <label>WhatsApp</label>
               <input type="tel" id="contatoWhats" placeholder="(82) 9 9999-9999">
-            </div>
+            </div><p class="lgpd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>Seus dados são protegidos e usados apenas para este atendimento. Nada de spam — conforme a LGPD.</p>
           </div>
 
           <!-- SUCCESS -->
@@ -815,7 +846,7 @@
         <div class="foot-col">
           <h4>Contato</h4>
           <a href="#quiz">Diagnóstico gratuito</a>
-          <a href="https://wa.me/5582900000000" target="_blank" rel="noopener">WhatsApp</a>
+          <a href="https://wa.me/5582999363976" target="_blank" rel="noopener">WhatsApp (82) 99936-3976</a>
           <p>Maceió, Alagoas</p>
         </div>
         <div class="foot-col">
@@ -827,13 +858,13 @@
       </div>
     </div>
     <div class="foot-bottom">
-      <p>© 2026 BroWash — Soluções de Limpeza Inteligente.</p>
+      <p>© 2026 BroWash — Soluções de Limpeza Inteligente. Seus dados são tratados conforme a LGPD.</p>
       <p>Limpeza aérea por drone em Maceió/AL.</p>
     </div>
   </div>
 </footer>
 
-<a class="whatsapp-fab" href="https://wa.me/5582900000000" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+<a class="whatsapp-fab" href="https://wa.me/5582999363976" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
   <svg viewBox="0 0 24 24" fill="none"><path d="M20.5 11.9c0 4.7-3.9 8.5-8.6 8.5-1.5 0-2.9-.4-4.2-1.1L3 20.5l1.2-4.5A8.4 8.4 0 0 1 3.3 12c0-4.7 3.9-8.5 8.6-8.5s8.6 3.8 8.6 8.4Z" stroke="#031018" stroke-width="1.6" stroke-linejoin="round"/><path d="M8.7 8.8c.2-.5.4-.5.6-.5h.5c.2 0 .4 0 .5.4.2.5.6 1.6.7 1.7.1.1.1.3 0 .5-.1.2-.2.3-.3.4-.1.2-.3.3-.1.6.2.4.9 1.4 1.9 2.2 1.3 1 2.3 1.3 2.7 1.4.3.1.5.1.7-.1.2-.2.7-.8.9-1.1.2-.2.4-.2.6-.1l1.6.8c.2.1.4.2.4.3.1.2.1 1-.3 1.5-.4.6-1.8 1.2-2.6 1.1-1.9-.2-4-1-5.5-2.5-1.3-1.3-2-2.5-2.4-3.5-.4-1-.4-1.9-.1-2.6Z" fill="#031018"/></svg>
 </a>
 
@@ -979,6 +1010,7 @@
 
   /* ---- Supabase: grava o lead antes de abrir o WhatsApp ---- */
   const SB_URL='https://khxzjbkvxcigxldsciib.supabase.co';
+  const SHEET_ENDPOINT=''; // Apps Script Web App
   const SB_KEY='sb_publishable_W6soFPfbGIHuF8ec8gVbKA_7YgdTHdD';
   let leadSalvo=false;
   function salvarLead(){
@@ -989,6 +1021,12 @@
       headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'return=minimal'},
       body:JSON.stringify({profile:answers.profile||'',detalhe:answers.detalhe||'',urgencia:answers.urgencia||'',nome:answers.nome||'',whats:answers.whats||''})
     }).catch(()=>{leadSalvo=false;});
+    if(SHEET_ENDPOINT){
+      fetch(SHEET_ENDPOINT,{method:'POST',mode:'no-cors',keepalive:true,
+        headers:{'Content-Type':'text/plain'},
+        body:JSON.stringify({profile:answers.profile||'',detalhe:answers.detalhe||'',urgencia:answers.urgencia||'',nome:answers.nome||'',whats:answers.whats||'',origem:'landing'})
+      }).catch(()=>{});
+    }
   }
   function buildWhatsLink(){
     salvarLead();
@@ -999,7 +1037,7 @@
       `• Nome: ${answers.nome}%0A` +
       `• WhatsApp: ${answers.whats}%0A%0A` +
       `Quero receber uma proposta.`;
-    document.getElementById('whatsSubmit').href = `https://wa.me/5582900000000?text=${msg}`;
+    document.getElementById('whatsSubmit').href = `https://wa.me/5582999363976?text=${msg}`;
   }
 
   // allow segment cards to jump into quiz pre-selecting profile
