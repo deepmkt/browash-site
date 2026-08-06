@@ -437,6 +437,22 @@
   /* nota LGPD */
   .lgpd{display:flex;gap:9px;align-items:center;margin-top:14px;color:var(--ink-faint);font-size:.78rem;line-height:1.5;}
   .lgpd svg{width:15px;height:15px;flex:none;color:var(--ok);}
+
+  .seg-refline{font-family:'IBM Plex Mono';font-size:11px;color:var(--ink-faint);letter-spacing:.04em;margin:-8px 0 16px;}
+
+  /* O QUE FAZEMOS */
+  .oque{padding:96px 0; background:linear-gradient(180deg,var(--bg-deep),#071019 55%,var(--bg-deep));}
+  .oq-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-top:44px;}
+  .oq-card{background:var(--bg-panel); border:1px solid var(--line); border-radius:14px; overflow:hidden; transition:transform .35s var(--ease), border-color .35s;}
+  .oq-card:hover{transform:translateY(-6px); border-color:var(--blue-mid);}
+  .oq-card figure{margin:0; aspect-ratio:1/1; overflow:hidden;}
+  .oq-card img{width:100%; height:100%; object-fit:cover; transition:transform .6s var(--ease);}
+  .oq-card:hover img{transform:scale(1.07);}
+  .oq-card figcaption{padding:12px 14px 14px;}
+  .oq-card b{display:block; font-family:'Space Grotesk'; font-size:15.5px; color:#fff;}
+  .oq-card span{display:block; font-size:12px; color:var(--ink-dim); margin-top:3px; line-height:1.5;}
+  .oq-note{margin-top:22px; font-size:.82rem; color:var(--ink-faint); text-align:center;}
+  @media(max-width:900px){.oq-grid{grid-template-columns:repeat(2,1fr); gap:12px;}}
 </style>
 </head>
 <body>
@@ -468,6 +484,7 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
           <a href="#como-funciona" class="btn-ghost">Ver como funciona</a>
+      <a href="#oque">O que fazemos</a>
         </div>
         <div class="hero-badges">
           <div class="hero-badge"><span class="n">100%</span><span class="l">Operação aérea</span></div>
@@ -571,7 +588,28 @@
   </section>
 
   <!-- SEGMENTS -->
-  <section class="segments" id="segmentos">
+  
+<section class="oque" id="oque">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">O que fazemos</span>
+      <h2>Toda superfície que o drone alcança — e limpa</h2>
+      <p>Registros reais das nossas operações, superfície por superfície.</p>
+    </div>
+    <div class="oq-grid">
+        <div class="oq-card reveal"><figure><img src="/oq-parede.jpg" alt="Drone da BroWash limpando parede" loading="lazy"></figure><figcaption><b>Parede</b><span>Fachadas e empenas, do térreo ao topo</span></figcaption></div>
+        <div class="oq-card reveal"><figure><img src="/oq-janela.jpg" alt="Drone da BroWash limpando janela" loading="lazy"></figure><figcaption><b>Janela</b><span>Vidros e esquadrias sem rapel</span></figcaption></div>
+        <div class="oq-card reveal"><figure><img src="/oq-placa.jpg" alt="Drone da BroWash limpando placa fotovoltaica" loading="lazy"></figure><figcaption><b>Placa fotovoltaica</b><span>Sem pisar nos módulos, sem microfissura</span></figcaption></div>
+        <div class="oq-card reveal"><figure><img src="/oq-telhado.jpg" alt="Drone da BroWash limpando telhado" loading="lazy"></figure><figcaption><b>Telhado</b><span>Telhas limpas sem ninguém em cima</span></figcaption></div>
+        <div class="oq-card reveal"><figure><img src="/oq-pastilha.jpg" alt="Drone da BroWash limpando pastilha" loading="lazy"></figure><figcaption><b>Pastilha</b><span>Brilho de fachada nova, sem andaime</span></figcaption></div>
+        <div class="oq-card reveal"><figure><img src="/oq-ceramica.jpg" alt="Drone da BroWash limpando cerâmica" loading="lazy"></figure><figcaption><b>Cerâmica</b><span>Remoção de sujeira impregnada</span></figcaption></div>
+        <div class="oq-card reveal"><figure><img src="/oq-porcelanato.jpg" alt="Drone da BroWash limpando porcelanato" loading="lazy"></figure><figcaption><b>Porcelanato</b><span>Aplicação controlada e uniforme</span></figcaption></div>
+        <div class="oq-card reveal"><figure><img src="/oq-fungo.jpg" alt="Drone da BroWash limpando fungo" loading="lazy"></figure><figcaption><b>Fungo</b><span>Tratamento de mofo, lodo e infiltração</span></figcaption></div>
+    </div>
+    <p class="oq-note">Fotos de operações reais da BroWash — sem banco de imagens.</p>
+  </div>
+</section>
+<section class="segments" id="segmentos">
     <div class="wrap">
       <div class="section-head reveal">
         <span class="eyebrow">Feito para o seu tipo de imóvel</span>
@@ -580,33 +618,36 @@
       </div>
       <div class="seg-grid">
         <div class="seg-card reveal" data-quiz-profile="Condomínio / Edifício">
-          <div class="seg-photo"><img src="/img2.jpg" alt="Drone limpando fachada de edifício"></div>
+          <div class="seg-photo"><img src="/seg-cond.jpg" alt="Condomínio residencial em Maceió"></div>
           <div class="seg-body">
             <span class="tag">Condomínios &amp; edifícios</span>
             <h3>Síndicos e administradoras</h3>
             <p>Fachadas altas limpas sem isolar áreas comuns, sem colocar moradores em risco e com relatório pronto para a próxima assembleia.</p>
+            <p class="seg-refline">Referência: condomínio residencial em Maceió</p>
             <span class="go">Começar diagnóstico
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </span>
           </div>
         </div>
         <div class="seg-card reveal" data-quiz-profile="Empresa / Fachada Comercial" style="transition-delay:.1s">
-          <div class="seg-photo"><img src="/img3.jpg" alt="Drone limpando janela de fachada comercial"></div>
+          <div class="seg-photo"><img src="/seg-hotel.jpg" alt="Maceió Mar Hotel, na orla de Pajuçara"></div>
           <div class="seg-body">
             <span class="tag">Fachadas comerciais</span>
             <h3>Lojas, hotéis e prédios corporativos</h3>
             <p>Sua marca sempre impecável — limpeza fora do horário de funcionamento, sem fechar a loja ou afastar clientes.</p>
+            <p class="seg-refline">Referência: Maceió Mar Hotel — orla de Pajuçara</p>
             <span class="go">Começar diagnóstico
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </span>
           </div>
         </div>
         <div class="seg-card solar reveal" data-quiz-profile="Usina / Placas Solares" style="transition-delay:.2s">
-          <div class="seg-photo"><img src="/img4.jpg" alt="Drone limpando placas fotovoltaicas"></div>
+          <div class="seg-photo"><img src="/seg-usina.jpg" alt="Drone da BroWash lavando estrutura da Usina Utinga Leão (AL)"></div>
           <div class="seg-body">
             <span class="tag">Usinas &amp; placas solares</span>
             <h3>Geração de energia protegida</h3>
             <p>Poeira e sujeira acumulada reduzem a geração. Limpamos sem pisar nos módulos, evitando microfissuras e perda de garantia.</p>
+            <p class="seg-refline">Na foto: operação real na Usina Utinga Leão (AL)</p>
             <span class="go">Começar diagnóstico
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </span>
