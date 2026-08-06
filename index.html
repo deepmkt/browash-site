@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BroWash — Limpeza Aérea Inteligente de Fachadas e Placas Solares</title>
+<link rel="icon" type="image/png" href="/img1.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#05080e;
+    --bg-panel:#0a1220;
+    --bg-panel-2:#0e1a2c;
+    --bg-panel-3:#0c1626;
+    --line:#1b2b40;
+    --blue-deep:#0d4d80;
+    --blue-mid:#1a7fbf;
+    --cyan:#33d7ff;
+    --cyan-soft:#9be9ff;
+    --gold:#ffc24b;
+    --ink:#eaf4fb;
+    --ink-dim:#8fa6bc;
+    --ink-faint:#5c7188;
+    --ok:#4be3a6;
+    --radius:18px;
+    --ease:cubic-bezier(.22,1,.36,1);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg-deep);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.disp{font-family:'Space Grotesk',sans-serif; letter-spacing:-.01em; margin:0;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  p{margin:0;}
+  img{max-width:100%; display:block;}
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; cursor:pointer;}
+  ::selection{background:var(--cyan); color:#031018;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important;}
+  }
+
+  .wrap{max-width:1180px; margin:0 auto; padding:0 32px;}
+  @media (max-width:720px){.wrap{padding:0 20px;}}
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--cyan-soft);
+  }
+  .eyebrow::before{content:''; width:7px; height:7px; border-radius:50%; background:var(--cyan); box-shadow:0 0 10px 2px var(--cyan);}
+
+  /* ===== NAV ===== */
+  header.nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    background:rgba(5,8,14,.55); backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(255,255,255,.06);
+    transition:background .3s var(--ease);
+  }
+  .nav-inner{
+    max-width:1180px; margin:0 auto; padding:14px 32px;
+    display:flex; align-items:center; justify-content:space-between; gap:20px;
+  }
+  .nav-logo{display:flex; align-items:center; gap:10px; height:48px;}
+  .nav-logo img{height:100%; width:auto; filter:drop-shadow(0 2px 10px rgba(0,0,0,.5)) brightness(1.08);}
+  .nav-cta{
+    background:linear-gradient(135deg, var(--cyan), var(--blue-mid));
+    color:#031018; font-weight:700; font-size:14.5px;
+    padding:11px 22px; border-radius:999px; border:none;
+    box-shadow:0 8px 24px -8px rgba(51,215,255,.55);
+    transition:transform .25s var(--ease), box-shadow .25s var(--ease);
+    white-space:nowrap;
+  }
+  .nav-cta:hover{transform:translateY(-2px); box-shadow:0 12px 28px -6px rgba(51,215,255,.7);}
+  @media (max-width:640px){ .nav-cta span.long{display:none;} }
+
+  /* ===== HERO ===== */
+  .hero{
+    position:relative; min-height:100svh; display:flex; align-items:center;
+    padding:150px 0 90px; overflow:hidden;
+    background:#05080e;
+  }
+  .hero-video{
+    position:absolute; inset:0; z-index:0;
+    width:100%; height:100%; object-fit:cover; object-position:50% 30%;
+    opacity:.62;
+  }
+  .hero-scrim{
+    position:absolute; inset:0; z-index:1;
+    background:
+      linear-gradient(90deg, rgba(5,8,14,.96) 0%, rgba(5,8,14,.88) 34%, rgba(5,8,14,.55) 62%, rgba(5,8,14,.35) 100%),
+      linear-gradient(180deg, rgba(5,8,14,.5) 0%, transparent 22%, transparent 70%, rgba(5,8,14,.95) 100%);
+  }
+  .hero-grid{
+    position:absolute; inset:0; z-index:1; opacity:.35;
+    background-image:
+      linear-gradient(rgba(51,215,255,.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(51,215,255,.07) 1px, transparent 1px);
+    background-size:56px 56px;
+    mask-image:radial-gradient(ellipse 70% 60% at 30% 30%, black 10%, transparent 75%);
+  }
+  .hero-inner{
+    position:relative; z-index:2; max-width:1180px; margin:0 auto; padding:0 32px;
+    display:grid; grid-template-columns:1fr; gap:40px; align-items:center;
+  }
+  .hero-copy{max-width:600px;}
+  .video-credit{
+    display:inline-flex; align-items:center; gap:8px; margin-top:38px;
+    font-family:'IBM Plex Mono'; font-size:11.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.08em;
+  }
+  .video-credit .rec{width:7px; height:7px; border-radius:50%; background:#ff4d4d; box-shadow:0 0 8px 2px rgba(255,77,77,.7); animation:recBlink 1.4s infinite;}
+  @keyframes recBlink{0%,100%{opacity:1;}50%{opacity:.25;}}
+
+  .hero-copy h1{
+    font-size:clamp(34px, 5vw, 60px); line-height:1.04; font-weight:700; color:#fff;
+    margin:18px 0 22px;
+  }
+  .hero-copy h1 em{
+    font-style:normal;
+    background:linear-gradient(100deg, var(--cyan-soft), var(--cyan) 45%, var(--blue-mid));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero-copy p.lede{
+    font-size:17.5px; color:var(--ink-dim); max-width:520px; line-height:1.6; margin-bottom:34px;
+  }
+  .hero-ctas{display:flex; gap:14px; flex-wrap:wrap;}
+  .btn-primary{
+    background:linear-gradient(135deg, var(--cyan), var(--blue-mid));
+    color:#031018; font-weight:700; font-size:15.5px;
+    padding:16px 28px; border-radius:999px; border:none;
+    box-shadow:0 10px 30px -8px rgba(51,215,255,.55);
+    transition:transform .25s var(--ease), box-shadow .25s var(--ease);
+    display:inline-flex; align-items:center; gap:10px;
+  }
+  .btn-primary:hover{transform:translateY(-2px) scale(1.015); box-shadow:0 16px 34px -6px rgba(51,215,255,.7);}
+  .btn-ghost{
+    background:transparent; color:var(--ink); font-weight:600; font-size:15.5px;
+    padding:16px 24px; border-radius:999px; border:1px solid rgba(255,255,255,.18);
+    transition:border-color .25s, background .25s, transform .25s var(--ease);
+    display:inline-flex; align-items:center; gap:10px;
+  }
+  .btn-ghost:hover{border-color:var(--cyan); background:rgba(51,215,255,.06); transform:translateY(-2px);}
+
+  .hero-badges{display:flex; gap:24px; margin-top:44px; flex-wrap:wrap;}
+  .hero-badge{display:flex; flex-direction:column; gap:2px;}
+  .hero-badge .n{font-family:'Space Grotesk'; font-weight:700; font-size:22px; color:#fff;}
+  .hero-badge .l{font-size:12px; color:var(--ink-faint); font-family:'IBM Plex Mono'; text-transform:uppercase; letter-spacing:.06em;}
+
+  /* ===== COVERAGE MARQUEE ===== */
+  .coverage{
+    background:var(--bg-deep); border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    padding:26px 0; overflow:hidden; position:relative;
+  }
+  .coverage::before, .coverage::after{
+    content:''; position:absolute; top:0; bottom:0; width:80px; z-index:2; pointer-events:none;
+  }
+  .coverage::before{left:0; background:linear-gradient(90deg, var(--bg-deep), transparent);}
+  .coverage::after{right:0; background:linear-gradient(270deg, var(--bg-deep), transparent);}
+  .marquee{display:flex; width:max-content; animation:marquee 26s linear infinite;}
+  .marquee span{
+    display:inline-flex; align-items:center; gap:18px;
+    font-family:'Space Grotesk'; font-weight:700; font-size:clamp(28px,5vw,52px);
+    color:transparent; -webkit-text-stroke:1px rgba(155,233,255,.5);
+    padding:0 28px; white-space:nowrap;
+  }
+  .marquee span.solid{
+    -webkit-text-stroke:0; color:transparent;
+    background:linear-gradient(100deg, var(--cyan-soft), var(--cyan) 45%, var(--blue-mid));
+    -webkit-background-clip:text; background-clip:text;
+  }
+  .marquee span .dot-sep{width:9px; height:9px; border-radius:50%; background:var(--cyan); box-shadow:0 0 10px 2px rgba(51,215,255,.7); -webkit-text-stroke:0;}
+  @keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+  /* ===== TESTIMONIALS ===== */
+  .testimonials{background:var(--bg-panel);}
+  .tst-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  @media (max-width:860px){ .tst-grid{grid-template-columns:1fr; max-width:340px; margin:0 auto;} }
+  .tst-card{
+    position:relative; border-radius:var(--radius); overflow:hidden; border:1px solid var(--line);
+    background:#000; aspect-ratio:9/16; cursor:pointer;
+    box-shadow:0 30px 60px -30px rgba(0,0,0,.7);
+    transition:transform .35s var(--ease), border-color .35s;
+  }
+  .tst-card:hover{transform:translateY(-6px); border-color:var(--cyan-soft);}
+  .tst-card video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+  .tst-scrim{position:absolute; inset:0; background:linear-gradient(0deg, rgba(0,0,0,.75) 0%, transparent 38%, rgba(0,0,0,.15) 100%); pointer-events:none; transition:opacity .3s;}
+  .tst-play{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    z-index:3; transition:opacity .3s, transform .3s var(--ease);
+  }
+  .tst-play .circle{
+    width:62px; height:62px; border-radius:50%; background:rgba(255,255,255,.14); backdrop-filter:blur(6px);
+    border:1px solid rgba(255,255,255,.4); display:flex; align-items:center; justify-content:center;
+    transition:transform .3s var(--ease), background .3s;
+  }
+  .tst-card:hover .tst-play .circle{transform:scale(1.08); background:rgba(51,215,255,.28);}
+  .tst-play svg{margin-left:3px;}
+  .tst-card.playing .tst-play{opacity:0; pointer-events:none;}
+  .tst-tag{
+    position:absolute; left:16px; bottom:16px; z-index:3;
+    font-family:'IBM Plex Mono'; font-size:11.5px; color:#fff; letter-spacing:.06em;
+    display:flex; align-items:center; gap:8px;
+  }
+  .tst-tag .wv{display:flex; align-items:flex-end; gap:2px; height:12px;}
+  .tst-tag .wv i{width:2.5px; background:var(--cyan); border-radius:2px; animation:wv 1s ease-in-out infinite;}
+  .tst-tag .wv i:nth-child(1){height:40%; animation-delay:0s;}
+  .tst-tag .wv i:nth-child(2){height:100%; animation-delay:.15s;}
+  .tst-tag .wv i:nth-child(3){height:65%; animation-delay:.3s;}
+  .tst-card:not(.playing) .wv i{animation-play-state:paused; height:30%;}
+  @keyframes wv{0%,100%{height:30%;}50%{height:100%;}}
+  .tst-mute{
+    position:absolute; top:14px; right:14px; z-index:3; width:34px; height:34px; border-radius:50%;
+    background:rgba(0,0,0,.4); border:1px solid rgba(255,255,255,.25); display:flex; align-items:center; justify-content:center;
+    opacity:0; transition:opacity .25s;
+  }
+  .tst-card.playing .tst-mute{opacity:1;}
+
+  /* ===== SECTION SHELL ===== */
+  section{position:relative; padding:110px 0;}
+  @media (max-width:720px){ section{padding:76px 0;} }
+  .section-head{max-width:640px; margin-bottom:56px;}
+  .section-head h2{font-size:clamp(26px,3.4vw,40px); color:#fff; margin-top:14px; line-height:1.15;}
+  .section-head p{color:var(--ink-dim); font-size:16.5px; margin-top:16px; line-height:1.6;}
+
+  .reveal{opacity:0; transform:translateY(28px); transition:opacity .8s var(--ease), transform .8s var(--ease);}
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  /* ===== PROBLEM ===== */
+  .problem{background:var(--bg-panel);}
+  .problem-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  @media (max-width:860px){ .problem-grid{grid-template-columns:1fr;} }
+  .problem-card{
+    background:var(--bg-panel-2); border:1px solid var(--line); border-radius:var(--radius);
+    padding:30px 26px; transition:transform .3s var(--ease), border-color .3s;
+  }
+  .problem-card:hover{transform:translateY(-6px); border-color:rgba(255,120,90,.35);}
+  .problem-card .ic{
+    width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+    background:rgba(255,120,90,.12); color:#ff8a6b; margin-bottom:18px;
+  }
+  .problem-card h3{font-size:18.5px; color:#fff; margin-bottom:10px;}
+  .problem-card p{color:var(--ink-dim); font-size:14.8px; line-height:1.6;}
+
+  /* ===== PROCESS ===== */
+  .process{background:var(--bg-deep);}
+  .steps{position:relative; display:grid; grid-template-columns:repeat(4,1fr); gap:0; counter-reset:step;}
+  @media (max-width:860px){ .steps{grid-template-columns:1fr; gap:34px;} }
+  .steps::before{
+    content:''; position:absolute; top:26px; left:6%; right:6%; height:2px;
+    background:linear-gradient(90deg, var(--line), var(--line));
+    z-index:0;
+  }
+  @media (max-width:860px){ .steps::before{ left:26px; top:0; bottom:0; width:2px; height:auto; right:auto; } }
+  .step{position:relative; z-index:1; padding-right:20px;}
+  @media (max-width:860px){ .step{padding-left:66px; padding-right:0;} }
+  .step .num{
+    width:52px; height:52px; border-radius:50%; background:var(--bg-panel-2);
+    border:1px solid var(--line); display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono'; font-weight:500; font-size:15px; color:var(--ink-faint);
+    margin-bottom:22px; transition:border-color .4s, color .4s, box-shadow .4s;
+  }
+  @media (max-width:860px){ .step .num{position:absolute; left:0; top:0; margin-bottom:0;} }
+  .step.on .num{border-color:var(--cyan); color:var(--cyan); box-shadow:0 0 0 4px rgba(51,215,255,.08);}
+  .step h3{font-size:17px; color:#fff; margin-bottom:9px;}
+  .step p{font-size:14.3px; color:var(--ink-dim); line-height:1.6; max-width:230px;}
+
+  /* ===== SEGMENTS ===== */
+  .segments{background:var(--bg-panel);}
+  .seg-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  @media (max-width:900px){ .seg-grid{grid-template-columns:1fr;} }
+  .seg-card{
+    position:relative; border-radius:var(--radius);
+    background:var(--bg-panel-2); border:1px solid var(--line); overflow:hidden;
+    cursor:pointer; transition:transform .35s var(--ease), border-color .35s;
+    display:flex; flex-direction:column;
+  }
+  .seg-card:hover{transform:translateY(-8px); border-color:var(--cyan);}
+  .seg-photo{position:relative; width:100%; aspect-ratio:16/10; overflow:hidden;}
+  .seg-photo img{width:100%; height:100%; object-fit:cover; transition:transform .6s var(--ease); filter:saturate(1.05) contrast(1.03);}
+  .seg-card:hover .seg-photo img{transform:scale(1.08);}
+  .seg-photo::after{content:''; position:absolute; inset:0; background:linear-gradient(0deg, var(--bg-panel-2) 0%, rgba(10,18,32,.15) 55%, transparent 100%);}
+  .seg-body{padding:26px 26px 28px; position:relative;}
+  .seg-card::before{
+    content:''; position:absolute; top:-40%; right:-40%; width:70%; height:70%; border-radius:50%;
+    background:radial-gradient(circle, rgba(51,215,255,.14), transparent 70%);
+    opacity:0; transition:opacity .35s; pointer-events:none; z-index:2;
+  }
+  .seg-card:hover::before{opacity:1;}
+  .seg-card .tag{font-family:'IBM Plex Mono'; font-size:11.5px; color:var(--cyan-soft); letter-spacing:.08em; text-transform:uppercase;}
+  .seg-card h3{font-size:21px; color:#fff; margin:14px 0 12px;}
+  .seg-card p{color:var(--ink-dim); font-size:14.5px; line-height:1.65; margin-bottom:20px;}
+  .seg-card .go{
+    display:inline-flex; align-items:center; gap:8px; font-size:14px; font-weight:600; color:var(--cyan);
+  }
+  .seg-card .go svg{transition:transform .3s var(--ease);}
+  .seg-card:hover .go svg{transform:translateX(4px);}
+  .seg-card.solar .tag{color:var(--gold);}
+  .seg-card.solar .go{color:var(--gold);}
+  .seg-card.solar:hover{border-color:var(--gold);}
+  .seg-card.solar::before{background:radial-gradient(circle, rgba(255,194,75,.14), transparent 70%);}
+
+  /* ===== COMPARISON ===== */
+  .compare{background:var(--bg-deep);}
+  .cmp-table{width:100%; border-collapse:collapse; overflow:hidden; border-radius:var(--radius);
+    border:1px solid var(--line);}
+  .cmp-table th, .cmp-table td{padding:18px 20px; text-align:left; font-size:14.6px; border-bottom:1px solid var(--line);}
+  .cmp-table th{background:var(--bg-panel-2); color:var(--ink-dim); font-weight:600; font-family:'IBM Plex Mono'; font-size:12.5px; text-transform:uppercase; letter-spacing:.05em;}
+  .cmp-table td:first-child{color:var(--ink-dim); width:38%;}
+  .cmp-table tr:last-child td{border-bottom:none;}
+  .cmp-table tbody tr{background:var(--bg-panel); transition:background .25s;}
+  .cmp-table tbody tr:hover{background:var(--bg-panel-2);}
+  .cell-bad{color:#ff8a6b; display:flex; align-items:center; gap:8px;}
+  .cell-good{color:var(--ok); display:flex; align-items:center; gap:8px; font-weight:600;}
+  .cmp-table th.win{color:var(--cyan-soft);}
+  .cmp-wrap{overflow-x:auto;}
+  @media (max-width:640px){ .cmp-table{min-width:560px;} }
+
+  .exclusive-strip{
+    margin-top:44px; display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+    padding:22px 26px; border-radius:var(--radius); border:1px solid rgba(51,215,255,.25);
+    background:linear-gradient(90deg, rgba(51,215,255,.07), transparent);
+  }
+  .exclusive-strip .dot{width:10px; height:10px; border-radius:50%; background:var(--cyan); box-shadow:0 0 14px 3px rgba(51,215,255,.7); flex:none;}
+  .exclusive-strip p{font-size:15px; color:var(--ink); line-height:1.5;}
+  .exclusive-strip strong{color:#fff;}
+
+  /* ===== QUIZ ===== */
+  .quiz{background:var(--bg-panel); position:relative;}
+  .quiz-box{
+    max-width:680px; margin:0 auto; background:var(--bg-panel-2); border:1px solid var(--line);
+    border-radius:24px; padding:44px 40px; position:relative; overflow:hidden;
+    box-shadow:0 40px 90px -40px rgba(0,0,0,.6);
+  }
+  @media (max-width:640px){ .quiz-box{padding:30px 22px;} }
+  .quiz-box::before{
+    content:''; position:absolute; top:-30%; left:50%; width:70%; height:60%; transform:translateX(-50%);
+    background:radial-gradient(ellipse, rgba(51,215,255,.14), transparent 70%); pointer-events:none;
+  }
+  .quiz-progress{display:flex; gap:6px; margin-bottom:28px; position:relative; z-index:1;}
+  .quiz-progress i{flex:1; height:4px; border-radius:4px; background:var(--line); overflow:hidden; position:relative;}
+  .quiz-progress i span{position:absolute; inset:0; background:linear-gradient(90deg, var(--cyan), var(--blue-mid)); transform:scaleX(0); transform-origin:left; transition:transform .5s var(--ease);}
+  .quiz-progress i.done span{transform:scaleX(1);}
+  .quiz-meta{display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; position:relative; z-index:1;}
+  .quiz-step-label{font-family:'IBM Plex Mono'; font-size:11.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.08em;}
+  .quiz-panel{position:relative; z-index:1;}
+  .q-step{display:none;}
+  .q-step.active{display:block; animation:qin .5s var(--ease);}
+  @keyframes qin{from{opacity:0; transform:translateX(16px);} to{opacity:1; transform:translateX(0);}}
+  .q-step h3{font-size:23px; color:#fff; margin-bottom:22px; line-height:1.3;}
+  .opt-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  @media (max-width:520px){ .opt-grid{grid-template-columns:1fr;} }
+  .opt{
+    border:1px solid var(--line); background:var(--bg-panel-3); border-radius:14px;
+    padding:16px 18px; font-size:14.8px; color:var(--ink); text-align:left;
+    transition:border-color .25s, background .25s, transform .2s;
+    display:flex; align-items:center; gap:10px;
+  }
+  .opt:hover{border-color:var(--cyan-soft); transform:translateY(-2px);}
+  .opt.sel{border-color:var(--cyan); background:rgba(51,215,255,.1); color:#fff; font-weight:600;}
+  .opt .dotc{width:8px; height:8px; border-radius:50%; border:1.5px solid var(--ink-faint); flex:none; transition:all .2s;}
+  .opt.sel .dotc{background:var(--cyan); border-color:var(--cyan); box-shadow:0 0 8px 2px rgba(51,215,255,.6);}
+  .q-field{margin-bottom:16px;}
+  .q-field label{display:block; font-size:13px; color:var(--ink-dim); margin-bottom:8px; font-family:'IBM Plex Mono';}
+  .q-field input, .q-field textarea{
+    width:100%; background:var(--bg-panel-3); border:1px solid var(--line); border-radius:12px;
+    padding:14px 16px; color:#fff; font-size:15px; font-family:'Inter'; transition:border-color .25s;
+  }
+  .q-field input:focus, .q-field textarea:focus{outline:none; border-color:var(--cyan);}
+  .q-field textarea{resize:vertical; min-height:90px;}
+  .quiz-nav{display:flex; justify-content:space-between; align-items:center; margin-top:28px; position:relative; z-index:1;}
+  .q-back{color:var(--ink-faint); font-size:14px; font-weight:600; background:none; border:none; padding:10px 6px;}
+  .q-back:hover{color:var(--ink);}
+  .q-back:disabled{opacity:0; pointer-events:none;}
+  .q-next{
+    background:linear-gradient(135deg, var(--cyan), var(--blue-mid)); color:#031018; font-weight:700;
+    padding:14px 26px; border-radius:999px; border:none; font-size:14.8px;
+    box-shadow:0 10px 26px -8px rgba(51,215,255,.55); transition:transform .2s var(--ease), opacity .2s;
+  }
+  .q-next:hover{transform:translateY(-2px);}
+  .q-next:disabled{opacity:.4; pointer-events:none; transform:none;}
+
+  .q-success{text-align:center; padding:20px 0;}
+  .q-success .burst{width:70px; height:70px; margin:0 auto 22px; border-radius:50%; background:rgba(75,227,166,.12);
+    display:flex; align-items:center; justify-content:center; position:relative;}
+  .q-success .burst svg{width:32px; height:32px;}
+  .q-success h3{font-size:24px; color:#fff; margin-bottom:12px;}
+  .q-success p{color:var(--ink-dim); font-size:15px; line-height:1.6; max-width:420px; margin:0 auto 26px;}
+
+  /* ===== FOOTER ===== */
+  footer{background:var(--bg-deep); border-top:1px solid var(--line); padding:60px 0 34px;}
+  .foot-top{display:flex; justify-content:space-between; align-items:flex-start; gap:40px; flex-wrap:wrap; margin-bottom:40px;}
+  .foot-logo{height:46px;}
+  .foot-links{display:flex; gap:44px; flex-wrap:wrap;}
+  .foot-col h4{font-family:'IBM Plex Mono'; font-size:12px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.08em; margin-bottom:14px;}
+  .foot-col a, .foot-col p{display:block; font-size:14.5px; color:var(--ink-dim); margin-bottom:9px;}
+  .foot-col a:hover{color:var(--cyan-soft);}
+  .foot-bottom{border-top:1px solid var(--line); padding-top:24px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;}
+  .foot-bottom p{font-size:13px; color:var(--ink-faint);}
+
+  .whatsapp-fab{
+    position:fixed; bottom:24px; right:24px; z-index:90;
+    width:58px; height:58px; border-radius:50%; background:linear-gradient(135deg, var(--cyan), var(--blue-mid));
+    display:flex; align-items:center; justify-content:center; box-shadow:0 14px 30px -8px rgba(51,215,255,.6);
+    animation:fabPulse 2.6s ease-in-out infinite;
+  }
+  @keyframes fabPulse{0%,100%{box-shadow:0 14px 30px -8px rgba(51,215,255,.6);}50%{box-shadow:0 14px 40px -4px rgba(51,215,255,.9);}}
+  .whatsapp-fab svg{width:27px; height:27px;}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#top" class="nav-logo"><img src="/img1.png" alt="BroWash"></a>
+    <a href="#quiz" class="nav-cta"><span class="long">Quero </span>atendimento agora</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <video class="hero-video" autoplay muted loop playsinline poster="/img1.jpg">
+      <source src="/v1.mp4" type="video/mp4">
+    </video>
+    <div class="hero-scrim"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <span class="eyebrow">Tecnologia exclusiva em Maceió</span>
+        <h1>Sua fachada limpa <em>sem andaime, sem risco</em> e sem parar sua rotina.</h1>
+        <p class="lede">A BroWash usa drones de alta precisão para lavar fachadas, placas solares e edifícios inteiros no ar — com menos água, mais segurança e um resultado que qualquer pessoa lá de baixo consegue ver.</p>
+        <div class="hero-ctas">
+          <a href="#quiz" class="btn-primary">
+            Quero atendimento agora
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="#como-funciona" class="btn-ghost">Ver como funciona</a>
+        </div>
+        <div class="hero-badges">
+          <div class="hero-badge"><span class="n">100%</span><span class="l">Operação aérea</span></div>
+          <div class="hero-badge"><span class="n">0</span><span class="l">Andaimes ou rapel</span></div>
+          <div class="hero-badge"><span class="n">1ª</span><span class="l">Empresa do tipo em Maceió</span></div>
+        </div>
+        <div class="video-credit"><span class="rec"></span>Imagens reais de uma operação BroWash</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COVERAGE -->
+  <section class="coverage">
+    <div class="marquee">
+      <span class="solid">Atendemos todo o Nordeste</span>
+      <span><span class="dot-sep"></span></span>
+      <span>Tecnologia BroWash</span>
+      <span><span class="dot-sep"></span></span>
+      <span class="solid">Atendemos todo o Nordeste</span>
+      <span><span class="dot-sep"></span></span>
+      <span>Tecnologia BroWash</span>
+      <span><span class="dot-sep"></span></span>
+      <span class="solid">Atendemos todo o Nordeste</span>
+      <span><span class="dot-sep"></span></span>
+      <span>Tecnologia BroWash</span>
+      <span><span class="dot-sep"></span></span>
+      <span class="solid">Atendemos todo o Nordeste</span>
+      <span><span class="dot-sep"></span></span>
+      <span>Tecnologia BroWash</span>
+      <span><span class="dot-sep"></span></span>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="problem">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">O método antigo</span>
+        <h2>Limpeza tradicional não acompanha o ritmo do seu negócio</h2>
+        <p>Andaime, corda e balancim ainda são a realidade da maioria dos prédios — e isso custa tempo, segurança e dinheiro.</p>
+      </div>
+      <div class="problem-grid">
+        <div class="problem-card reveal">
+          <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2 2 21h20L12 2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 9v5M12 17h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+          <h3>Risco para a equipe</h3>
+          <p>Trabalho em altura com corda e andaime é uma das atividades mais perigosas da construção civil — e cada acidente vira um problema seu.</p>
+        </div>
+        <div class="problem-card reveal" style="transition-delay:.1s">
+          <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+          <h3>Interdição e transtorno</h3>
+          <p>Área isolada, moradores incomodados, loja com a entrada tomada por equipamento — a limpeza vira um evento que atrapalha o dia a dia.</p>
+        </div>
+        <div class="problem-card reveal" style="transition-delay:.2s">
+          <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3c3 4 6 7.5 6 11a6 6 0 1 1-12 0c0-3.5 3-7 6-11Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+          <h3>Água e produto sem controle</h3>
+          <p>Mangueira aberta e produto aplicado no olho não garante economia nem uniformidade — cada faxineiro limpa de um jeito diferente.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="process" id="como-funciona">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Como funciona</span>
+        <h2>Da avaliação ao relatório final, tudo conduzido no ar</h2>
+        <p>Um processo enxuto, pensado para não interromper sua rotina — a equipe opera do solo, o drone faz o trabalho pesado.</p>
+      </div>
+      <div class="steps">
+        <div class="step reveal" data-step>
+          <div class="num">01</div>
+          <h3>Diagnóstico</h3>
+          <p>Avaliamos o tipo de superfície — vidro, ACM, pintura ou painel solar — e o melhor plano de voo.</p>
+        </div>
+        <div class="step reveal" data-step style="transition-delay:.1s">
+          <div class="num">02</div>
+          <h3>Escaneamento aéreo</h3>
+          <p>O drone mapeia a fachada ou a instalação inteira antes de iniciar a limpeza.</p>
+        </div>
+        <div class="step reveal" data-step style="transition-delay:.2s">
+          <div class="num">03</div>
+          <h3>Limpeza de precisão</h3>
+          <p>Jato de água controlado remove sujeira, poluição e oxidação sem contato direto com a superfície.</p>
+        </div>
+        <div class="step reveal" data-step style="transition-delay:.3s">
+          <div class="num">04</div>
+          <h3>Inspeção e relatório</h3>
+          <p>Você recebe o registro fotográfico de antes e depois, pronto para prestar contas ou divulgar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEGMENTS -->
+  <section class="segments" id="segmentos">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Feito para o seu tipo de imóvel</span>
+        <h2>Cada superfície pede uma abordagem diferente</h2>
+        <p>Escolha o seu perfil e vá direto para as perguntas certas no nosso diagnóstico rápido.</p>
+      </div>
+      <div class="seg-grid">
+        <div class="seg-card reveal" data-quiz-profile="Condomínio / Edifício">
+          <div class="seg-photo"><img src="/img2.jpg" alt="Drone limpando fachada de edifício"></div>
+          <div class="seg-body">
+            <span class="tag">Condomínios &amp; edifícios</span>
+            <h3>Síndicos e administradoras</h3>
+            <p>Fachadas altas limpas sem isolar áreas comuns, sem colocar moradores em risco e com relatório pronto para a próxima assembleia.</p>
+            <span class="go">Começar diagnóstico
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </div>
+        </div>
+        <div class="seg-card reveal" data-quiz-profile="Empresa / Fachada Comercial" style="transition-delay:.1s">
+          <div class="seg-photo"><img src="/img3.jpg" alt="Drone limpando janela de fachada comercial"></div>
+          <div class="seg-body">
+            <span class="tag">Fachadas comerciais</span>
+            <h3>Lojas, hotéis e prédios corporativos</h3>
+            <p>Sua marca sempre impecável — limpeza fora do horário de funcionamento, sem fechar a loja ou afastar clientes.</p>
+            <span class="go">Começar diagnóstico
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </div>
+        </div>
+        <div class="seg-card solar reveal" data-quiz-profile="Usina / Placas Solares" style="transition-delay:.2s">
+          <div class="seg-photo"><img src="/img4.jpg" alt="Drone limpando placas fotovoltaicas"></div>
+          <div class="seg-body">
+            <span class="tag">Usinas &amp; placas solares</span>
+            <h3>Geração de energia protegida</h3>
+            <p>Poeira e sujeira acumulada reduzem a geração. Limpamos sem pisar nos módulos, evitando microfissuras e perda de garantia.</p>
+            <span class="go">Começar diagnóstico
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARISON -->
+  <section class="compare">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Comparativo</span>
+        <h2>Método tradicional x BroWash</h2>
+        <p>A diferença aparece antes mesmo do resultado final.</p>
+      </div>
+      <div class="cmp-wrap reveal">
+        <table class="cmp-table">
+          <thead>
+            <tr><th>Critério</th><th>Método tradicional</th><th class="win">BroWash</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Segurança da equipe</td>
+              <td><span class="cell-bad">✕ Exposição em altura</span></td>
+              <td><span class="cell-good">✓ Equipe opera do solo</span></td>
+            </tr>
+            <tr>
+              <td>Andaime, corda ou balancim</td>
+              <td><span class="cell-bad">✕ Necessário</span></td>
+              <td><span class="cell-good">✓ Dispensado</span></td>
+            </tr>
+            <tr>
+              <td>Interrupção da rotina</td>
+              <td><span class="cell-bad">✕ Área isolada por horas</span></td>
+              <td><span class="cell-good">✓ Mínima ou nenhuma</span></td>
+            </tr>
+            <tr>
+              <td>Consumo de água e produtos</td>
+              <td><span class="cell-bad">✕ Sem controle</span></td>
+              <td><span class="cell-good">✓ Aplicação controlada e uniforme</span></td>
+            </tr>
+            <tr>
+              <td>Alcance em pontos altos e de difícil acesso</td>
+              <td><span class="cell-bad">✕ Limitado</span></td>
+              <td><span class="cell-good">✓ Qualquer altura ou ângulo</span></td>
+            </tr>
+            <tr>
+              <td>Registro fotográfico do resultado</td>
+              <td><span class="cell-bad">✕ Raramente</span></td>
+              <td><span class="cell-good">✓ Antes e depois documentado</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="exclusive-strip reveal">
+        <span class="dot"></span>
+        <p><strong>Exclusividade em Maceió.</strong> A BroWash é a única operação de limpeza aérea por drone da região — tecnologia que, em outras capitais, já virou padrão para condomínios, redes comerciais e usinas solares.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Quem já viu de perto</span>
+        <h2>Registros reais de operação e feedback de quem contratou</h2>
+        <p>Sem atores, sem edição de agência — vídeos direto do campo. Toque para assistir com áudio.</p>
+      </div>
+      <div class="tst-grid">
+        <div class="tst-card reveal" data-tst>
+          <video playsinline muted loop preload="metadata" poster="/img5.jpg">
+            <source src="/v2.mp4" type="video/mp4">
+          </video>
+          <div class="tst-scrim"></div>
+          <span class="tst-tag"><span class="wv"><i></i><i></i><i></i></span>Depoimento</span>
+          <button class="tst-mute" aria-label="Mudo/Som" data-mute>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M11 5 6 9H3v6h3l5 4V5Z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 8a5 5 0 0 1 0 8M19 5a9 9 0 0 1 0 14" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+          <div class="tst-play"><div class="circle"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7L8 5Z"/></svg></div></div>
+        </div>
+        <div class="tst-card reveal" data-tst style="transition-delay:.1s">
+          <video playsinline muted loop preload="metadata" poster="/img6.jpg">
+            <source src="/v3.mp4" type="video/mp4">
+          </video>
+          <div class="tst-scrim"></div>
+          <span class="tst-tag"><span class="wv"><i></i><i></i><i></i></span>Depoimento</span>
+          <button class="tst-mute" aria-label="Mudo/Som" data-mute>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M11 5 6 9H3v6h3l5 4V5Z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 8a5 5 0 0 1 0 8M19 5a9 9 0 0 1 0 14" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+          <div class="tst-play"><div class="circle"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7L8 5Z"/></svg></div></div>
+        </div>
+        <div class="tst-card reveal" data-tst style="transition-delay:.2s">
+          <video playsinline muted loop preload="metadata" poster="/img7.jpg">
+            <source src="/v4.mp4" type="video/mp4">
+          </video>
+          <div class="tst-scrim"></div>
+          <span class="tst-tag"><span class="wv"><i></i><i></i><i></i></span>Depoimento</span>
+          <button class="tst-mute" aria-label="Mudo/Som" data-mute>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M11 5 6 9H3v6h3l5 4V5Z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 8a5 5 0 0 1 0 8M19 5a9 9 0 0 1 0 14" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+          <div class="tst-play"><div class="circle"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7L8 5Z"/></svg></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="quiz" id="quiz">
+    <div class="wrap">
+      <div class="section-head reveal" style="margin:0 auto 44px; text-align:center; max-width:560px;">
+        <span class="eyebrow" style="justify-content:center; display:flex;">Atendimento imediato</span>
+        <h2>Responda 3 perguntas rápidas e receba sua proposta</h2>
+        <p>Leva menos de 1 minuto — no final, você fala direto com a nossa equipe pelo WhatsApp.</p>
+      </div>
+
+      <div class="quiz-box reveal">
+        <div class="quiz-meta">
+          <span class="quiz-step-label" id="quizStepLabel">Etapa 1 de 4</span>
+        </div>
+        <div class="quiz-progress" id="quizProgress">
+          <i class="done"></i><i></i><i></i><i></i>
+        </div>
+
+        <div class="quiz-panel" id="quizPanel">
+
+          <!-- STEP 1: profile -->
+          <div class="q-step active" data-step="1">
+            <h3>Qual é o seu perfil?</h3>
+            <div class="opt-grid" data-group="profile">
+              <button class="opt" data-value="Condomínio / Edifício"><span class="dotc"></span>Síndico / Condomínio</button>
+              <button class="opt" data-value="Empresa / Fachada Comercial"><span class="dotc"></span>Empresa / Fachada comercial</button>
+              <button class="opt" data-value="Usina / Placas Solares"><span class="dotc"></span>Usina ou placas solares</button>
+              <button class="opt" data-value="Outro perfil"><span class="dotc"></span>Outro perfil</button>
+            </div>
+          </div>
+
+          <!-- STEP 2a: condominio -->
+          <div class="q-step" data-step="2" data-branch="Condomínio / Edifício">
+            <h3>Quantos pavimentos tem o edifício?</h3>
+            <div class="opt-grid" data-group="detalhe">
+              <button class="opt" data-value="Até 5 pavimentos"><span class="dotc"></span>Até 5 pavimentos</button>
+              <button class="opt" data-value="6 a 15 pavimentos"><span class="dotc"></span>6 a 15 pavimentos</button>
+              <button class="opt" data-value="16 a 30 pavimentos"><span class="dotc"></span>16 a 30 pavimentos</button>
+              <button class="opt" data-value="Acima de 30 pavimentos"><span class="dotc"></span>Acima de 30 pavimentos</button>
+            </div>
+          </div>
+
+          <!-- STEP 2b: comercial -->
+          <div class="q-step" data-step="2" data-branch="Empresa / Fachada Comercial">
+            <h3>Qual o tipo da fachada?</h3>
+            <div class="opt-grid" data-group="detalhe">
+              <button class="opt" data-value="Vidro / Espelhada"><span class="dotc"></span>Vidro / espelhada</button>
+              <button class="opt" data-value="ACM / Metálica"><span class="dotc"></span>ACM / metálica</button>
+              <button class="opt" data-value="Pintura / Reboco"><span class="dotc"></span>Pintura / reboco</button>
+              <button class="opt" data-value="Não sei informar"><span class="dotc"></span>Não sei informar</button>
+            </div>
+          </div>
+
+          <!-- STEP 2c: solar -->
+          <div class="q-step" data-step="2" data-branch="Usina / Placas Solares">
+            <h3>Qual o tamanho aproximado da instalação?</h3>
+            <div class="opt-grid" data-group="detalhe">
+              <button class="opt" data-value="Residencial (até 20 placas)"><span class="dotc"></span>Residencial (até 20 placas)</button>
+              <button class="opt" data-value="Comercial (20 a 100 placas)"><span class="dotc"></span>Comercial (20 a 100 placas)</button>
+              <button class="opt" data-value="Usina (acima de 100 placas)"><span class="dotc"></span>Usina (acima de 100 placas)</button>
+              <button class="opt" data-value="Não sei informar"><span class="dotc"></span>Não sei informar</button>
+            </div>
+          </div>
+
+          <!-- STEP 2d: outro -->
+          <div class="q-step" data-step="2" data-branch="Outro perfil">
+            <h3>Conte rapidamente o que você precisa limpar</h3>
+            <div class="q-field">
+              <label>Descrição</label>
+              <textarea id="outroDetalhe" placeholder="Ex: cobertura de vidro, painel de comunicação visual, telhado industrial..."></textarea>
+            </div>
+          </div>
+
+          <!-- STEP 3: urgency -->
+          <div class="q-step" data-step="3">
+            <h3>Com que urgência você precisa da limpeza?</h3>
+            <div class="opt-grid" data-group="urgencia">
+              <button class="opt" data-value="Esta semana"><span class="dotc"></span>Esta semana</button>
+              <button class="opt" data-value="Este mês"><span class="dotc"></span>Este mês</button>
+              <button class="opt" data-value="Ainda estou pesquisando"><span class="dotc"></span>Ainda estou pesquisando</button>
+              <button class="opt" data-value="Preciso de manutenção recorrente"><span class="dotc"></span>Manutenção recorrente</button>
+            </div>
+          </div>
+
+          <!-- STEP 4: contact -->
+          <div class="q-step" data-step="4">
+            <h3>Para onde enviamos sua proposta?</h3>
+            <div class="q-field">
+              <label>Nome</label>
+              <input type="text" id="contatoNome" placeholder="Seu nome">
+            </div>
+            <div class="q-field">
+              <label>WhatsApp</label>
+              <input type="tel" id="contatoWhats" placeholder="(82) 9 9999-9999">
+            </div>
+          </div>
+
+          <!-- SUCCESS -->
+          <div class="q-step" data-step="5">
+            <div class="q-success">
+              <div class="burst"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="#4be3a6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <h3>Diagnóstico pronto!</h3>
+              <p>Já sabemos exatamente o que você precisa. Toque no botão abaixo para enviar essas respostas direto para o WhatsApp da nossa equipe e receber sua proposta.</p>
+              <a href="#" id="whatsSubmit" class="btn-primary" target="_blank" rel="noopener">
+                Enviar para o WhatsApp
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="quiz-nav" id="quizNav">
+          <button class="q-back" id="qBack">← Voltar</button>
+          <button class="q-next" id="qNext" disabled>Continuar</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <img class="foot-logo" src="/img1.png" alt="BroWash">
+      <div class="foot-links">
+        <div class="foot-col">
+          <h4>Contato</h4>
+          <a href="#quiz">Diagnóstico gratuito</a>
+          <a href="https://wa.me/5582900000000" target="_blank" rel="noopener">WhatsApp</a>
+          <p>Maceió, Alagoas</p>
+        </div>
+        <div class="foot-col">
+          <h4>Soluções</h4>
+          <a href="#segmentos">Condomínios e edifícios</a>
+          <a href="#segmentos">Fachadas comerciais</a>
+          <a href="#segmentos">Placas e usinas solares</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <p>© 2026 BroWash — Soluções de Limpeza Inteligente.</p>
+      <p>Limpeza aérea por drone em Maceió/AL.</p>
+    </div>
+  </div>
+</footer>
+
+<a class="whatsapp-fab" href="https://wa.me/5582900000000" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+  <svg viewBox="0 0 24 24" fill="none"><path d="M20.5 11.9c0 4.7-3.9 8.5-8.6 8.5-1.5 0-2.9-.4-4.2-1.1L3 20.5l1.2-4.5A8.4 8.4 0 0 1 3.3 12c0-4.7 3.9-8.5 8.6-8.5s8.6 3.8 8.6 8.4Z" stroke="#031018" stroke-width="1.6" stroke-linejoin="round"/><path d="M8.7 8.8c.2-.5.4-.5.6-.5h.5c.2 0 .4 0 .5.4.2.5.6 1.6.7 1.7.1.1.1.3 0 .5-.1.2-.2.3-.3.4-.1.2-.3.3-.1.6.2.4.9 1.4 1.9 2.2 1.3 1 2.3 1.3 2.7 1.4.3.1.5.1.7-.1.2-.2.7-.8.9-1.1.2-.2.4-.2.6-.1l1.6.8c.2.1.4.2.4.3.1.2.1 1-.3 1.5-.4.6-1.8 1.2-2.6 1.1-1.9-.2-4-1-5.5-2.5-1.3-1.3-2-2.5-2.4-3.5-.4-1-.4-1.9-.1-2.6Z" fill="#031018"/></svg>
+</a>
+
+<script>
+(function(){
+  /* ---------- reveal on scroll ---------- */
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:.15});
+  revealEls.forEach(el=>io.observe(el));
+
+  /* ---------- process step highlight ---------- */
+  const steps = document.querySelectorAll('[data-step]');
+  const stepIO = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('on'); });
+  }, {threshold:.5});
+  steps.forEach(s=>stepIO.observe(s));
+
+  /* ---------- testimonial video cards ---------- */
+  document.querySelectorAll('[data-tst]').forEach(card=>{
+    const video = card.querySelector('video');
+    const muteBtn = card.querySelector('[data-mute]');
+    video.muted = true;
+
+    function pauseOthers(){
+      document.querySelectorAll('[data-tst]').forEach(other=>{
+        if(other !== card){
+          other.classList.remove('playing');
+          const v = other.querySelector('video');
+          v.pause(); v.muted = true;
+        }
+      });
+    }
+
+    card.addEventListener('click', (e)=>{
+      if(e.target.closest('[data-mute]')) return;
+      if(video.paused){
+        pauseOthers();
+        video.muted = false;
+        video.currentTime = 0;
+        video.play();
+        card.classList.add('playing');
+      } else {
+        video.pause();
+        card.classList.remove('playing');
+      }
+    });
+
+    muteBtn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      video.muted = !video.muted;
+      muteBtn.style.opacity = video.muted ? '.6' : '1';
+    });
+
+    video.addEventListener('ended', ()=>{ card.classList.remove('playing'); video.muted = true; });
+  });
+
+  /* ---------- QUIZ STATE MACHINE ---------- */
+  const answers = { profile:'', detalhe:'', urgencia:'', nome:'', whats:'' };
+  const stepOrder = ['1','2','3','4','5'];
+  let currentIndex = 0;
+
+  const panel = document.getElementById('quizPanel');
+  const nextBtn = document.getElementById('qNext');
+  const backBtn = document.getElementById('qBack');
+  const progressWrap = document.getElementById('quizProgress');
+  const stepLabel = document.getElementById('quizStepLabel');
+
+  function activeStepEl(){
+    const num = stepOrder[currentIndex];
+    if(num === '2'){
+      return panel.querySelector(`.q-step[data-step="2"][data-branch="${answers.profile}"]`);
+    }
+    return panel.querySelector(`.q-step[data-step="${num}"]`);
+  }
+
+  function showStep(){
+    panel.querySelectorAll('.q-step').forEach(el=>el.classList.remove('active'));
+    const el = activeStepEl();
+    if(el) el.classList.add('active');
+
+    const totalVisible = 4; // 4 questions before success
+    const visibleIndex = Math.min(currentIndex+1, totalVisible);
+    stepLabel.textContent = currentIndex < 4 ? `Etapa ${visibleIndex} de 4` : 'Concluído';
+    progressWrap.querySelectorAll('i').forEach((bar,i)=>{
+      bar.classList.toggle('done', i < visibleIndex);
+    });
+
+    backBtn.disabled = currentIndex === 0;
+    nextBtn.style.display = currentIndex === 4 ? 'none' : 'inline-flex';
+    document.getElementById('quizNav').style.display = currentIndex === 4 ? 'none' : 'flex';
+    validateNext();
+  }
+
+  function validateNext(){
+    const el = activeStepEl();
+    if(!el){ nextBtn.disabled = true; return; }
+    const num = el.getAttribute('data-step');
+    if(num === '1'){ nextBtn.disabled = !answers.profile; }
+    else if(num === '2'){
+      if(answers.profile === 'Outro perfil'){
+        nextBtn.disabled = !document.getElementById('outroDetalhe').value.trim();
+      } else {
+        nextBtn.disabled = !answers.detalhe;
+      }
+    }
+    else if(num === '3'){ nextBtn.disabled = !answers.urgencia; }
+    else if(num === '4'){
+      const nome = document.getElementById('contatoNome').value.trim();
+      const whats = document.getElementById('contatoWhats').value.trim();
+      nextBtn.disabled = !(nome && whats.length >= 8);
+    }
+  }
+
+  panel.addEventListener('click', (e)=>{
+    const opt = e.target.closest('.opt');
+    if(!opt) return;
+    const group = opt.closest('[data-group]').getAttribute('data-group');
+    const value = opt.getAttribute('data-value');
+    opt.closest('.opt-grid').querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+    opt.classList.add('sel');
+    answers[group] = value;
+    validateNext();
+  });
+
+  panel.addEventListener('input', (e)=>{
+    if(e.target.id === 'outroDetalhe'){ answers.detalhe = e.target.value.trim(); validateNext(); }
+    if(e.target.id === 'contatoNome'){ answers.nome = e.target.value.trim(); validateNext(); }
+    if(e.target.id === 'contatoWhats'){ answers.whats = e.target.value.trim(); validateNext(); }
+  });
+
+  nextBtn.addEventListener('click', ()=>{
+    if(currentIndex === 3){ buildWhatsLink(); }
+    currentIndex = Math.min(currentIndex+1, stepOrder.length-1);
+    showStep();
+  });
+  backBtn.addEventListener('click', ()=>{
+    currentIndex = Math.max(currentIndex-1, 0);
+    showStep();
+  });
+
+
+  /* ---- Supabase: grava o lead antes de abrir o WhatsApp ---- */
+  const SB_URL='https://khxzjbkvxcigxldsciib.supabase.co';
+  const SB_KEY='sb_publishable_W6soFPfbGIHuF8ec8gVbKA_7YgdTHdD';
+  let leadSalvo=false;
+  function salvarLead(){
+    if(leadSalvo||!answers.nome)return;
+    leadSalvo=true;
+    fetch(SB_URL+'/rest/v1/browash_leads',{
+      method:'POST',keepalive:true,
+      headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'return=minimal'},
+      body:JSON.stringify({profile:answers.profile||'',detalhe:answers.detalhe||'',urgencia:answers.urgencia||'',nome:answers.nome||'',whats:answers.whats||''})
+    }).catch(()=>{leadSalvo=false;});
+  }
+  function buildWhatsLink(){
+    salvarLead();
+    const msg = `Olá! Fiz o diagnóstico rápido no site da BroWash:%0A` +
+      `• Perfil: ${answers.profile}%0A` +
+      `• Detalhe: ${answers.detalhe}%0A` +
+      `• Urgência: ${answers.urgencia}%0A` +
+      `• Nome: ${answers.nome}%0A` +
+      `• WhatsApp: ${answers.whats}%0A%0A` +
+      `Quero receber uma proposta.`;
+    document.getElementById('whatsSubmit').href = `https://wa.me/5582900000000?text=${msg}`;
+  }
+
+  // allow segment cards to jump into quiz pre-selecting profile
+  document.querySelectorAll('[data-quiz-profile]').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      const val = card.getAttribute('data-quiz-profile');
+      answers.profile = val;
+      currentIndex = 0;
+      showStep();
+      const btn = panel.querySelector(`.q-step[data-step="1"] .opt[data-value="${val}"]`);
+      if(btn){
+        panel.querySelectorAll('.q-step[data-step="1"] .opt').forEach(o=>o.classList.remove('sel'));
+        btn.classList.add('sel');
+      }
+      validateNext();
+      document.getElementById('quiz').scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+
+  showStep();
+})();
+</script>
+
+</body>
+</html>
